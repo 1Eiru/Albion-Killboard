@@ -89,20 +89,19 @@ def get_latest_events():
         processed_datas.append(processed_event)
     return processed_datas
 
+def event_stream():
+  while True:
+    with app.app_context():
+      latest_events = get_latest_events()
+      data = {
+          'events': latest_events,
+          'last_update': last_update_time
+      }
+      yield f"data: {json.dumps(data)}\n\n"
+
 @app.route('/stream')
 def stream():
-    def event_stream():
-        while True:
-            with app.app_context():
-                latest_events = get_latest_events()
-                data = {
-                    'events': latest_events,
-                    'last_update': last_update_time
-                }
-                yield f"data: {json.dumps(data)}\n\n"
-            time.sleep(15)  
-
-    return Response(event_stream(), content_type='text/event-stream')
+  return Response(event_stream(), content_type='text/event-stream')
 
 if __name__ == '__main__':
     app.run(threaded=True)
