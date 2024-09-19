@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Albion Events</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <style>
+        .grid-item {
+            height: 165px;
+            margin-bottom: 15px;
+        }
+        .grid-inventory {
+            height: 165px;
+            margin-bottom: 15px;
+        }
+        img {
+            display: block;
+            max-width: 75%;
+            height: auto;
+            text-align: center;
+        }
+    </style>
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="container">
+        <a href="{{url_for('home')}}" style=" text-decoration: none;"><h1>Lalo</h1></a>
+        <hr>
+    </div>
+    {% block content %}{% endblock %}
+    {% block scripts %}{% endblock %}
+</body>
+</html>

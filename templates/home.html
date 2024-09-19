@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+    <p id="refreshTimer" class="text-center">Last update: {{ last_update if last_update else 'Never' }}</p>
+    <table id="eventsTable" class="table table-responsive w-50 shadow">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Event</th>
+                <th>Time</th>
+                <th>Killer</th>
+                <th>Victim</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in datas %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>
+                        <a href="{{ url_for('events', event_id=data.EventId) }}">
+                            {{ data.EventId }}
+                        </a>
+                    </td>
+                    <td>
+                        {% if data.TimeStamp is string %}
+                            {{ data.TimeStamp }}
+                        {% else %}
+                            {{ data.TimeStamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                        {% endif %}
+                    </td>
+                    <td>{{ data.Killer.Name }}</td>
+                    <td>{{ data.Victim.Name }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    const timerDisplay = document.getElementById('refreshTimer');
+    const evtSource = new EventSource("{{ url_for('stream') }}");
+    let lastUpdateTime = "{{ last_update if last_update else 'Never' }}";
+
+    evtSource.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        if (data.last_update !== lastUpdateTime) {
+            updateTable(data.events);
+            updateTimer(data.last_update);
+            lastUpdateTime = data.last_update;
+        }
+    };
+
+    function updateTable(events) {
+        var tableBody = $("#eventsTable tbody");
+        tableBody.empty();
+        $.each(events, function(index, event) {
+            var row = $("<tr>");
+            row.append($("<td>").text(index + 1));
+            row.append($("<td>").append($("<a>")
+                .attr("href", "/events/" + event.EventId)
+                .text(event.EventId)));
+            row.append($("<td>").text(event.TimeStamp));
+            row.append($("<td>").text(event.KillerName));
+            row.append($("<td>").text(event.VictimName));
+            tableBody.append(row);
+        });
+    }
+
+    function updateTimer(time) {
+        timerDisplay.textContent = `Last update: ${time}`;
+    }
+</script>
+{% endblock %}
