@@ -121,4 +121,4 @@ def stream():
     return Response(event_stream(), content_type='text/event-stream')
 
 if __name__ == '__main__':
-    app.run(threaded=True, debug=True)
+    app.run(threaded=True)
