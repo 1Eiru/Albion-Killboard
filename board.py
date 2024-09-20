@@ -11,8 +11,8 @@ scheduler.init_app(app)
 scheduler.start()
 
 
-mongoURI = os.getenv('localhost',27017)
-client = MongoClient('localhost',27017)
+mongoURI = os.getenv('MONGODB_URI')
+client = MongoClient(mongoURI)
 db = client.flask_database
 events_collection = db.events
 
