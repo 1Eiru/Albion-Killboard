@@ -1,4 +1,4 @@
-# Albion-Killboard
+# Flask albion-kb
 
 ![](images/one.png)
 ![](images/two.png)
