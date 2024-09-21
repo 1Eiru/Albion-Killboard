@@ -1,9 +1,8 @@
 from flask import Flask, render_template, url_for, jsonify, Response
 from pymongo import MongoClient
-from bson import json_util
 from datetime import datetime, timedelta
 from flask_apscheduler import APScheduler
-import requests, time,json, os
+import requests,json, os
 
 app = Flask(__name__)
 scheduler = APScheduler()
